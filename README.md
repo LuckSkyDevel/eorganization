@@ -1,4 +1,4 @@
-# Project Portfolio (Initial skeleton)
+# EOrganization Project Portfolio
 
 This is an initial Spring Boot project skeleton for a Project Portfolio management system called EOrganization with:
 - JWT (access + refresh tokens)
