@@ -4,3 +4,4 @@
 /.mvn
 .DS_Store
 /*.log
+.vscode
