@@ -1,4 +1,4 @@
-package com.example.portfolio.service;
+package com.eorganization.portfolio.service;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
