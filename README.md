@@ -1,6 +1,6 @@
 # Project Portfolio (Initial skeleton)
 
-This is an initial Spring Boot project skeleton for a Project Portfolio management system with:
+This is an initial Spring Boot project skeleton for a Project Portfolio management system called EOrganization with:
 - JWT (access + refresh tokens)
 - Roles and permissions (fine-grained)
 - Spring Security
@@ -23,7 +23,7 @@ docker-compose up -d
 
 3. Start the app:
 ```
-java -jar target/project-portfolio-0.0.1-SNAPSHOT.jar
+java -jar target/eorganization-portfolio-0.0.1-SNAPSHOT.jar
 ```
 
 ## Auth endpoints
