@@ -14,6 +14,8 @@ public interface ProjetoService {
 
     ProjetoDTO findById(Long id);
 
+    ProjetoDTO atualizaStatusProjeto(Long id);
+
     void delete(Long id);
 
     Page<ProjetoDTO> listAll(Pageable pageable);

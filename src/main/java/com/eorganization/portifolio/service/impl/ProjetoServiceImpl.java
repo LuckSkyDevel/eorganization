@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.eorganization.portifolio.dto.projeto.AtualizaProjetoDTO;
 import com.eorganization.portifolio.dto.projeto.CadastroProjetoDTO;
 import com.eorganization.portifolio.dto.projeto.ProjetoDTO;
+import com.eorganization.portifolio.entity.ProjectStatus;
 import com.eorganization.portifolio.entity.Projeto;
 import com.eorganization.portifolio.exception.ResourceNotFoundException;
 import com.eorganization.portifolio.mapper.ProjectMapper;
@@ -49,6 +50,36 @@ public class ProjetoServiceImpl implements ProjetoService {
     public ProjetoDTO findById(@NonNull Long id) {
         return repo.findById(id).map(mapper::toDto)
                 .orElseThrow(() -> new ResourceNotFoundException("Project not found with id: " + id));
+    }
+
+    public ProjetoDTO atualizaStatusProjeto(@NonNull Long id) {
+        Projeto projeto = repo.findById(id).get();
+
+        if (projeto.getStAtual().equals(ProjectStatus.EM_ANDAMENTO)) {
+            projeto.setStAtual(ProjectStatus.ENCERRADO);
+        }
+
+        if (projeto.getStAtual().equals(ProjectStatus.PLANEJADO)) {
+            projeto.setStAtual(ProjectStatus.EM_ANDAMENTO);
+        }
+
+        if (projeto.getStAtual().equals(ProjectStatus.INICIADO)) {
+            projeto.setStAtual(ProjectStatus.PLANEJADO);
+        }
+
+        if (projeto.getStAtual().equals(ProjectStatus.ANALISE_APROVADA)) {
+            projeto.setStAtual(ProjectStatus.INICIADO);
+        }
+
+        if (projeto.getStAtual().equals(ProjectStatus.ANALISE_REALIZADA)) {
+            projeto.setStAtual(ProjectStatus.ANALISE_APROVADA);
+        }
+
+        if (projeto.getStAtual().equals(ProjectStatus.EM_ANALISE)) {
+            projeto.setStAtual(ProjectStatus.ANALISE_REALIZADA);
+        }
+
+        return mapper.toDto(projeto);
     }
 
     @Override
