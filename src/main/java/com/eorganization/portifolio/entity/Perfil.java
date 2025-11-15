@@ -3,6 +3,7 @@ package com.eorganization.portifolio.entity;
 import java.time.LocalDate;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,7 +33,7 @@ public class Perfil {
     @Column(name="st_ativo", nullable = false)
     private Boolean stAtivo = true;
 
-    @ManyToMany(mappedBy = "perfis")
+    @ManyToMany(mappedBy = "perfis", cascade=CascadeType.ALL)
     private Set<Usuario> usuarios;
 
     // Getters and Setters

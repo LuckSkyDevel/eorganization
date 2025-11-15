@@ -15,7 +15,5 @@ public interface MembroRepository extends JpaRepository<Membro, Long>, JpaSpecif
 
     Optional<Membro> findById(Long id);
 
-    Optional<Membro> update(Membro membro); 
-
     List<Membro> findByProjetoCodProjeto(Long codProjeto);
 }

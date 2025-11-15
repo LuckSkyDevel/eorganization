@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.eorganization.portifolio.dto.NivelRiscoDTO;
-import com.eorganization.portifolio.dto.equipe.EquipeDTO;
 import com.eorganization.portifolio.entity.ProjectStatus;
 
 import lombok.Data;
@@ -18,6 +17,5 @@ public class AtualizaProjetoDTO {
     private LocalDate datFim;
     private BigDecimal vlOrcamentoTotal;
     private NivelRiscoDTO nivelRisco;
-    private EquipeDTO equipe;
     private ProjectStatus stAtual;
 }

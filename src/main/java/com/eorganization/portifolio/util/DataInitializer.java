@@ -27,7 +27,7 @@ public class DataInitializer {
             pessoa.setNumTelefone("(11) 98765-4321");
             pessoa.setDatNascimento(LocalDate.parse("1990-05-15"));
 
-            List<Perfil> perfis = new ArrayList<Perfil>();
+            Set<Perfil> perfis = Set.of();
             if (perfilRepository.findAll().isEmpty()) {
 
                 Perfil perfil = new Perfil();
@@ -37,12 +37,17 @@ public class DataInitializer {
                 
                 perfil = new Perfil();
                 perfil.setNomPerfil("GERENTE");
-                perfil.setDesPerfil("Gerente do sistema");
+                perfil.setDesPerfil("Gerente de projetos");
                 perfis.add(perfil);
                 
                 perfil = new Perfil();
                 perfil.setNomPerfil("USUARIO");
-                perfil.setDesPerfil("Usuário do sistema");
+                perfil.setDesPerfil("Usuário comum");
+                perfis.add(perfil);
+                
+                perfil = new Perfil();
+                perfil.setNomPerfil("FUNCIONARIO");
+                perfil.setDesPerfil("Funcionario");
                 perfis.add(perfil);
 
                 perfilRepository.saveAll(perfis);
@@ -54,7 +59,7 @@ public class DataInitializer {
                 u.setNomUsuario("admin");
                 u.setDesSenha(encoder.encode("admin123"));
                 u.setPessoa(pessoa);
-                u.setPerfis(Set.of(perfis.get(0)));
+                u.setPerfis(perfis);
                 userRepo.save(u);
             }
 

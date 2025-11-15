@@ -22,7 +22,7 @@ public class Usuario {
     @JoinColumn(name = "cod_pessoa", nullable= false)
     private Pessoa pessoa;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
         name = "tb_usuario_perfil",
         joinColumns = @JoinColumn(name = "cod_usuario"),

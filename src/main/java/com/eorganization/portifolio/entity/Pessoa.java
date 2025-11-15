@@ -34,14 +34,8 @@ public class Pessoa {
     @Column(name = "dat_nascimento")
     private LocalDate datNascimento;
 
-    @ManyToMany
-    @JoinTable(name = "tb_pessoa_equipe", 
-        joinColumns = @JoinColumn(name = "cod_pessoa"), 
-        inverseJoinColumns = @JoinColumn(name = "cod_equipe"))
-    private List<Equipe> equipes;
-
-    @Column(name = "is_lider_equipe", nullable = false)
-    private Boolean isLiderEquipe = false;
+    @Column(name = "lider_equipe", nullable = false)
+    private Boolean liderEquipe = false;
 
     @Column(name = "st_ativo", nullable = false)
     private Boolean stAtivo = true;
@@ -85,6 +79,14 @@ public class Pessoa {
 
     public void setDatNascimento(LocalDate datNascimento) {
         this.datNascimento = datNascimento;
+    }
+
+    public Boolean getLiderEquipe() {
+        return liderEquipe;
+    }
+
+    public void setLiderEquipe(Boolean liderEquipe) {
+        this.liderEquipe = liderEquipe;
     }
 
     public Boolean getStAtivo() {

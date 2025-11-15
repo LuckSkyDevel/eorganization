@@ -31,11 +31,7 @@ public class Projeto {
     @Column(name = "vl_orcamento_total", nullable = false)
     private BigDecimal vlOrcamentoTotal;
 
-    @OneToOne
-    @JoinColumn(name = "cod_equipe", nullable = false)
-    private Equipe equipe;
-
-    @OneToOne
+    @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "cod_nivel_risco", nullable = false)
     private NivelRisco nivelRisco;
 
@@ -47,7 +43,7 @@ public class Projeto {
     }
 
     public Projeto(Long codProjeto, String nomProjeto, String dsProjeto, LocalDate datInicio, LocalDate datPrevisaoFim,
-            LocalDate datFim, BigDecimal vlOrcamentoTotal, Equipe equipe, NivelRisco nivelRisco,
+            LocalDate datFim, BigDecimal vlOrcamentoTotal, NivelRisco nivelRisco,
             ProjectStatus stAtual) {
         this.codProjeto = codProjeto;
         this.nomProjeto = nomProjeto;
@@ -56,7 +52,6 @@ public class Projeto {
         this.datPrevisaoFim = datPrevisaoFim;
         this.datFim = datFim;
         this.vlOrcamentoTotal = vlOrcamentoTotal;
-        this.equipe = equipe;
         this.nivelRisco = nivelRisco;
         this.stAtual = stAtual;
     }
@@ -116,14 +111,6 @@ public class Projeto {
 
     public void setVlOrcamentoTotal(BigDecimal vlOrcamentoTotal) {
         this.vlOrcamentoTotal = vlOrcamentoTotal;
-    }
-
-    public Equipe getEquipe() {
-        return equipe;
-    }
-
-    public void setEquipe(Equipe equipe) {
-        this.equipe = equipe;
     }
 
     public NivelRisco getNivelRisco() {

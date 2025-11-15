@@ -1,30 +1,28 @@
 package com.eorganization.portifolio.service.impl;
 
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import com.eorganization.portifolio.entity.RefreshToken;
-import com.eorganization.portifolio.entity.Perfil;
-import com.eorganization.portifolio.entity.Usuario;
-import com.eorganization.portifolio.payload.*;
-import com.eorganization.portifolio.repository.RefreshTokenRepository;
-import com.eorganization.portifolio.repository.UsuarioRepository;
-import com.eorganization.portifolio.security.JwtService;
-import com.eorganization.portifolio.service.AuthService;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
+import com.eorganization.portifolio.entity.Perfil;
 import com.eorganization.portifolio.entity.Pessoa;
+import com.eorganization.portifolio.entity.RefreshToken;
+import com.eorganization.portifolio.entity.Usuario;
 import com.eorganization.portifolio.mapper.PessoaMapper;
+import com.eorganization.portifolio.payload.AuthRequest;
+import com.eorganization.portifolio.payload.AuthResponse;
+import com.eorganization.portifolio.payload.RegisterRequest;
 import com.eorganization.portifolio.repository.PerfilRepository;
+import com.eorganization.portifolio.repository.RefreshTokenRepository;
+import com.eorganization.portifolio.repository.UsuarioRepository;
+import com.eorganization.portifolio.security.JwtService;
+import com.eorganization.portifolio.service.AuthService;
 
 @Service
 public class AuthServiceImpl implements AuthService {
