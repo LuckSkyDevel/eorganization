@@ -1,5 +1,6 @@
 package com.eorganization.portifolio.entity;
 
+import java.io.Serial;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -11,7 +12,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "tb_perfil")
 public class Perfil {
@@ -36,52 +45,7 @@ public class Perfil {
     @ManyToMany(mappedBy = "perfis", cascade=CascadeType.ALL)
     private Set<Usuario> usuarios;
 
-    // Getters and Setters
-    public Long getCodPerfil() {
-        return codPerfil;
-    }
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-    public void setCodPerfil(Long codPerfil) {
-        this.codPerfil = codPerfil;
-    }
-
-    public String getNomPerfil() {
-        return nomPerfil;
-    }
-
-    public void setNomPerfil(String nomPerfil) {
-        this.nomPerfil = nomPerfil;
-    }
-
-    public String getDesPerfil() {
-        return desPerfil;
-    }
-
-    public void setDesPerfil(String desPerfil) {
-        this.desPerfil = desPerfil;
-    }
-
-    public LocalDate getDatCriacao() {
-        return datCriacao;
-    }
-
-    public void setDatCriacao(LocalDate datCriacao) {
-        this.datCriacao = datCriacao;
-    }
-
-    public Boolean getStAtivo() {
-        return stAtivo;
-    }
-
-    public void setStAtivo(Boolean stAtivo) {
-        this.stAtivo = stAtivo;
-    }
-
-    public Set<Usuario> getUsuarios() {
-        return usuarios;
-    }
-
-    public void setUsuarios(Set<Usuario> usuarios) {
-        this.usuarios = usuarios;
-    }
 }

@@ -1,9 +1,28 @@
 package com.eorganization.portifolio.entity;
 
-import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "tb_projetos")
 public class Projeto {
@@ -39,93 +58,4 @@ public class Projeto {
     @Column(name = "st_atual", nullable = false)
     private ProjectStatus stAtual;
 
-    public Projeto() {
-    }
-
-    public Projeto(Long codProjeto, String nomProjeto, String dsProjeto, LocalDate datInicio, LocalDate datPrevisaoFim,
-            LocalDate datFim, BigDecimal vlOrcamentoTotal, NivelRisco nivelRisco,
-            ProjectStatus stAtual) {
-        this.codProjeto = codProjeto;
-        this.nomProjeto = nomProjeto;
-        this.desProjeto = dsProjeto;
-        this.datInicio = datInicio;
-        this.datPrevisaoFim = datPrevisaoFim;
-        this.datFim = datFim;
-        this.vlOrcamentoTotal = vlOrcamentoTotal;
-        this.nivelRisco = nivelRisco;
-        this.stAtual = stAtual;
-    }
-
-    // Getters and Setters
-    public Long getCodProjeto() {
-        return codProjeto;
-    }
-
-    public void setCodProjeto(Long codProjeto) {
-        this.codProjeto = codProjeto;
-    }
-
-    public String getNomProjeto() {
-        return nomProjeto;
-    }
-
-    public void setNomProjeto(String nomProjeto) {
-        this.nomProjeto = nomProjeto;
-    }
-
-    public String getDesProjeto() {
-        return desProjeto;
-    }
-
-    public void setDesProjeto(String dsProjeto) {
-        this.desProjeto = dsProjeto;
-    }
-
-    public LocalDate getDatInicio() {
-        return datInicio;
-    }
-
-    public void setDatInicio(LocalDate datInicio) {
-        this.datInicio = datInicio;
-    }
-
-    public LocalDate getDatPrevisaoFim() {
-        return datPrevisaoFim;
-    }
-
-    public void setDatPrevisaoFim(LocalDate datPrevisaoFim) {
-        this.datPrevisaoFim = datPrevisaoFim;
-    }
-
-    public LocalDate getDatFim() {
-        return datFim;
-    }
-
-    public void setDatFim(LocalDate datFim) {
-        this.datFim = datFim;
-    }
-
-    public BigDecimal getVlOrcamentoTotal() {
-        return vlOrcamentoTotal;
-    }
-
-    public void setVlOrcamentoTotal(BigDecimal vlOrcamentoTotal) {
-        this.vlOrcamentoTotal = vlOrcamentoTotal;
-    }
-
-    public NivelRisco getNivelRisco() {
-        return nivelRisco;
-    }
-
-    public void setNivelRisco(NivelRisco nivelRisco) {
-        this.nivelRisco = nivelRisco;
-    }
-
-    public ProjectStatus getStAtual() {
-        return stAtual;
-    }
-
-    public void setStAtual(ProjectStatus stAtual) {
-        this.stAtual = stAtual;
-    }
 }

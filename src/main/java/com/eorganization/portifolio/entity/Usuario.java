@@ -1,12 +1,38 @@
 package com.eorganization.portifolio.entity;
 
-import jakarta.persistence.*;
+import java.io.Serial;
+import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "tb_usuario")
-public class Usuario {
-
+public class Usuario implements UserDetails{
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cod_usuario")
@@ -18,11 +44,11 @@ public class Usuario {
     @Column(name="des_senha", nullable = false)
     private String desSenha;
 
-    @ManyToOne(cascade= CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "cod_pessoa", nullable= false)
     private Pessoa pessoa;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "tb_usuario_perfil",
         joinColumns = @JoinColumn(name = "cod_usuario"),
@@ -30,8 +56,8 @@ public class Usuario {
     )
     private Set<Perfil> perfis;
 
-    public Usuario() {
-    }
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     public Usuario(String nomUsuario, String desSenha, Pessoa pessoa, Set<Perfil> perfis) {
         this.nomUsuario = nomUsuario;
@@ -40,44 +66,28 @@ public class Usuario {
         this.perfis = perfis;
     }
 
-    // getters/setters
-    public Long getCodUsuario() {
-        return codUsuario;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return perfis.stream()
+            .map(p -> new SimpleGrantedAuthority("ROLE_" + p.getNomPerfil().toUpperCase()))
+            .collect(Collectors.toList());
     }
 
-    public void setCodUsuario(Long codUsuario) {
-        this.codUsuario = codUsuario;
-    }
+    @Override
+    public String getPassword() { return desSenha; }
 
-    public String getNomUsuario() {
-        return nomUsuario;
-    }
+    @Override
+    public String getUsername() { return nomUsuario; }
 
-    public void setNomUsuario(String nomUsuario) {
-        this.nomUsuario = nomUsuario;
-    }
+    @Override
+    public boolean isAccountNonExpired() { return true; }
 
-    public String getDesSenha() {
-        return desSenha;
-    }
+    @Override
+    public boolean isAccountNonLocked() { return true; }
 
-    public void setDesSenha(String desSenha) {
-        this.desSenha = desSenha;
-    }
+    @Override
+    public boolean isCredentialsNonExpired() { return true; }
 
-    public Pessoa getPessoa() {
-        return pessoa;
-    }
-
-    public void setPessoa(Pessoa pessoa) {
-        this.pessoa = pessoa;
-    }
-
-    public Set<Perfil> getPerfis() {
-        return perfis;
-    }
-
-    public void setPerfis(Set<Perfil> perfis) {
-        this.perfis = perfis;
-    }
+    @Override
+    public boolean isEnabled() { return true; }
 }

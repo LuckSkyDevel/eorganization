@@ -1,14 +1,20 @@
 package com.eorganization.portifolio.security;
 
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
+import java.security.Key;
+import java.util.Base64;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.Date;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtService {
@@ -17,49 +23,67 @@ public class JwtService {
     private final long accessValiditySeconds;
     private final long refreshValiditySeconds;
 
-    public JwtService(@Value("${jwt.secret}") String secret, @Value("${jwt.accessTokenValiditySeconds}") long accessValiditySeconds,
+    public JwtService(@Value("${jwt.secret}") String secret,
+            @Value("${jwt.accessTokenValiditySeconds}") long accessValiditySeconds,
             @Value("${jwt.refreshTokenValiditySeconds}") long refreshValiditySeconds) {
-        this.key = Keys.hmacShaKeyFor(secret.getBytes());
+        this.key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secret));
         this.accessValiditySeconds = accessValiditySeconds;
         this.refreshValiditySeconds = refreshValiditySeconds;
     }
 
-    public String generateAccessToken(String nomUsuario, Collection<String> perfis) {
-        Date now = new Date();
-        Date exp = new Date(now.getTime() + accessValiditySeconds * 1000);
-
-        return Jwts.builder().setSubject(nomUsuario).claim("roles", perfis).setIssuedAt(now).setExpiration(exp).signWith(key, SignatureAlgorithm.HS256).compact();
-    }
-
-    public String generateRefreshToken(String nomUsuario) {
-        Date now = new Date();
-        Date exp = new Date(now.getTime() + refreshValiditySeconds * 1000);
-
-        return Jwts.builder().setSubject(nomUsuario).setIssuedAt(now).setExpiration(exp).signWith(key, SignatureAlgorithm.HS256).compact();
+    public Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key).build()
+                .parseClaimsJws(token).getBody();
     }
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
+            extractAllClaims(token);
+            return "access".equals(extractAllClaims(token).get("type"));
         } catch (JwtException e) {
             return false;
         }
     }
 
     public String extractUsername(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
+        return extractAllClaims(token).getSubject();
     }
 
     @SuppressWarnings("unchecked")
-    public List<String> extractRolesProfiles(String token) {
-        var claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-        Object rolesProfiles = claims.get("roles");
-        
-        if (rolesProfiles instanceof Collection) {
-            return ((Collection<?>) rolesProfiles).stream().map(Object::toString).collect(Collectors.toList());
+    public List<String> extractRoles(String token) {
+        Object roles = extractAllClaims(token).get("roles");
+        if (roles instanceof Collection) {
+            return ((Collection<?>) roles).stream()
+                    .map(Object::toString)
+                    .collect(Collectors.toList());
         }
-
         return Collections.emptyList();
     }
+
+    public String generateAccessToken(String nomUsuario, Collection<String> perfis) {
+        Date now = new Date();
+        Date exp = new Date(now.getTime() + accessValiditySeconds * 1000);
+
+        return Jwts.builder()
+                .setSubject(nomUsuario)
+                .claim("type", "access")
+                .claim("roles", perfis)
+                .setIssuedAt(now)
+                .setExpiration(exp)
+                .signWith(key).compact();
+    }
+
+    public String generateRefreshToken(String nomUsuario) {
+        Date now = new Date();
+        Date exp = new Date(now.getTime() + refreshValiditySeconds * 1000);
+
+        return Jwts.builder()
+                .setSubject(nomUsuario)
+                .claim("type", "refresh")
+                .setIssuedAt(now)
+                .setExpiration(exp)
+                .signWith(key).compact();
+    }
+
 }
