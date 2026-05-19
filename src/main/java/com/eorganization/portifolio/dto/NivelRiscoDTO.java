@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class NivelRiscoDTO {
-    private Long codigoNivelRisco;
-    private String descricaoNivelRisco;
+    private Long codNivelRisco;
+    private String desNivelRisco;
 }

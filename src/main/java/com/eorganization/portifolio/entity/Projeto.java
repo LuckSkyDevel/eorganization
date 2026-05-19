@@ -3,7 +3,6 @@ package com.eorganization.portifolio.entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -32,25 +31,29 @@ public class Projeto {
     @Column(name = "cod_projeto")
     private Long codProjeto;
 
+    @ManyToOne
+    @JoinColumn(name = "cod_usuario_responsavel",referencedColumnName="cod_usuario", nullable = false)
+    private Usuario usuarioResponsavel;
+
     @Column(name = "nom_projeto", nullable = false)
     private String nomProjeto;
 
     @Column(name = "ds_projeto", nullable = false)
     private String desProjeto;
 
-    @Column(name = "dat_inicio")
+    @Column(name = "dat_inicio", nullable = false)
     private LocalDate datInicio;
 
-    @Column(name = "dat_previsao_fim")
+    @Column(name = "dat_previsao_fim", nullable=false)
     private LocalDate datPrevisaoFim;
 
-    @Column(name = "dt_fim")
+    @Column(name = "dat_fim", nullable = true)
     private LocalDate datFim;
 
     @Column(name = "vl_orcamento_total", nullable = false)
     private BigDecimal vlOrcamentoTotal;
 
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "cod_nivel_risco", nullable = false)
     private NivelRisco nivelRisco;
 

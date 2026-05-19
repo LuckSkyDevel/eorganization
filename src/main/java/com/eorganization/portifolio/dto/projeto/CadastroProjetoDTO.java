@@ -13,6 +13,5 @@ public class CadastroProjetoDTO {
     private String desProjeto;
     private LocalDate datInicio;
     private LocalDate datPrevisaoFim;
-    private LocalDate datFim;
     private BigDecimal vlOrcamentoTotal;
 }

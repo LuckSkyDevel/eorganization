@@ -1,8 +1,6 @@
 package com.eorganization.portifolio.util;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.boot.CommandLineRunner;
@@ -10,16 +8,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.eorganization.portifolio.entity.NivelRisco;
 import com.eorganization.portifolio.entity.Perfil;
 import com.eorganization.portifolio.entity.Pessoa;
 import com.eorganization.portifolio.entity.Usuario;
+import com.eorganization.portifolio.repository.NivelRiscoRespository;
 import com.eorganization.portifolio.repository.PerfilRepository;
 import com.eorganization.portifolio.repository.UsuarioRepository;
 
 @Configuration
 public class DataInitializer {
     @Bean
-    CommandLineRunner init(UsuarioRepository userRepo, PerfilRepository perfilRepository, PasswordEncoder encoder) {
+    CommandLineRunner init(UsuarioRepository userRepo, PerfilRepository perfilRepository,
+            NivelRiscoRespository nivelRiscoRepository, PasswordEncoder encoder) {
         return args -> {
             Pessoa pessoa = new Pessoa();
             pessoa.setNomPessoa("Jose Gustavo de Souza");
@@ -34,17 +35,17 @@ public class DataInitializer {
                 perfil.setNomPerfil("ADMIN");
                 perfil.setDesPerfil("Administrador do sistema");
                 perfis.add(perfil);
-                
+
                 perfil = new Perfil();
                 perfil.setNomPerfil("GERENTE");
                 perfil.setDesPerfil("Gerente de projetos");
                 perfis.add(perfil);
-                
+
                 perfil = new Perfil();
                 perfil.setNomPerfil("USUARIO");
                 perfil.setDesPerfil("Usuário comum");
                 perfis.add(perfil);
-                
+
                 perfil = new Perfil();
                 perfil.setNomPerfil("FUNCIONARIO");
                 perfil.setDesPerfil("Funcionario");
@@ -52,7 +53,6 @@ public class DataInitializer {
 
                 perfilRepository.saveAll(perfis);
             }
-
 
             if (!userRepo.existsByNomUsuario("admin")) {
                 Usuario u = new Usuario();
@@ -62,6 +62,12 @@ public class DataInitializer {
                 u.setPerfis(perfis);
                 userRepo.save(u);
             }
+
+            if(nivelRiscoRepository.findAll().isEmpty()) {
+                nivelRiscoRepository.save(new NivelRisco("ALTO"));
+                nivelRiscoRepository.save(new NivelRisco("MEDIO"));
+                nivelRiscoRepository.save(new NivelRisco("BAIXO"));
+            }  
 
             // if (!userRepo.existsByUsername("manager")) {
             // Usuario u = new Usuario();

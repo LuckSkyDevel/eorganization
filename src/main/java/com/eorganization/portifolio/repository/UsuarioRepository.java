@@ -8,6 +8,8 @@ import com.eorganization.portifolio.entity.Usuario;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
+    Usuario findByCodUsuario(Long codUsuario);
+
     Optional<Usuario> findByNomUsuario(String nomUsuario);
 
     boolean existsByNomUsuario(String nomUsuario);
