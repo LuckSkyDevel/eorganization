@@ -13,11 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.eorganization.portifolio.dto.projeto.AtualizaProjetoDTO;
 import com.eorganization.portifolio.dto.projeto.CadastroProjetoDTO;
 import com.eorganization.portifolio.dto.projeto.ProjetoDTO;
+import com.eorganization.portifolio.entity.Cargo;
+import com.eorganization.portifolio.entity.Membro;
 import com.eorganization.portifolio.entity.ProjectStatus;
 import com.eorganization.portifolio.entity.Projeto;
 import com.eorganization.portifolio.entity.Usuario;
 import com.eorganization.portifolio.exception.ResourceNotFoundException;
 import com.eorganization.portifolio.mapper.ProjectMapper;
+import com.eorganization.portifolio.repository.MembroRepository;
 import com.eorganization.portifolio.repository.NivelRiscoRespository;
 import com.eorganization.portifolio.repository.ProjetoRepository;
 import com.eorganization.portifolio.service.ProjetoService;
@@ -29,11 +32,14 @@ import lombok.NonNull;
 public class ProjetoServiceImpl implements ProjetoService {
     private final ProjetoRepository repo;
     private final NivelRiscoRespository repoRisco;
+    private final MembroRepository repoMembro;
     private final ProjectMapper mapper;
 
-    public ProjetoServiceImpl(ProjetoRepository repo, NivelRiscoRespository repoRisco, ProjectMapper mapper) {
+    public ProjetoServiceImpl(ProjetoRepository repo, NivelRiscoRespository repoRisco, MembroRepository repoMembro,
+            ProjectMapper mapper) {
         this.repo = repo;
         this.repoRisco = repoRisco;
+        this.repoMembro = repoMembro;
         this.mapper = mapper;
     }
 
@@ -49,13 +55,21 @@ public class ProjetoServiceImpl implements ProjetoService {
 
         Projeto saved = repo.save(p);
 
+        /* Adiciona membro ao projeto */
+        Membro membro = new Membro();
+        membro.setProjeto(saved);
+        membro.setUsuario(usuario);
+        membro.setDesCargo(Cargo.GERENTE);
+
+        repoMembro.save(membro);
+
         return mapper.toDto(saved);
     }
 
     @Override
     public ProjetoDTO update(@NonNull Long id, @NonNull AtualizaProjetoDTO dto) {
         Projeto p = repo.findById(id).orElseThrow(() -> new ResourceNotFoundException(
-                "Wasn't possible to update project. Project not found with id: " + id));
+                "Não foi possível atualizar o projeto. Projeto não encontrado com o id: " + id));
         defineRisco(p);
         mapper.updateEntity(dto, p);
 
@@ -67,7 +81,7 @@ public class ProjetoServiceImpl implements ProjetoService {
     @Override
     public ProjetoDTO findById(@NonNull Long id) {
         return repo.findById(id).map(mapper::toDto)
-                .orElseThrow(() -> new ResourceNotFoundException("Project not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Projeto não foi encontrado com o id: " + id));
     }
 
     @Override
@@ -98,13 +112,39 @@ public class ProjetoServiceImpl implements ProjetoService {
             projeto.setStAtual(ProjectStatus.ANALISE_REALIZADA);
         }
 
-        return mapper.toDto(projeto);
+        Projeto saved = repo.save(projeto);
+
+        return mapper.toDto(saved);
+    }
+
+    @Override
+    public ProjetoDTO cancelaProjeto(@NonNull Long id) {
+        Projeto projeto = repo.findById(id).get();
+        projeto.setStAtual(ProjectStatus.CANCELADO);
+
+        LocalDate dataAtual = LocalDate.now();
+        projeto.setDatFim(dataAtual);
+
+        Projeto saved = repo.save(projeto);
+
+        return mapper.toDto(saved);
     }
 
     @Override
     public void delete(@NonNull Long id) {
-        if (!repo.existsById(id))
-            throw new ResourceNotFoundException("Wasn't possible to delete project. Project not found with id: " + id);
+        Projeto projeto = repo.findById(id).get();
+
+        if (projeto == null)
+            throw new ResourceNotFoundException(
+                    "Não foi possível excluir o projeto, o codigo informado é inválido: " + id);
+
+        if (projeto.getStAtual().equals(ProjectStatus.EM_ANDAMENTO)
+                || projeto.getStAtual().equals(ProjectStatus.PLANEJADO)
+                || projeto.getStAtual().equals(ProjectStatus.INICIADO)) {
+            throw new IllegalStateException(
+                    "Não é possível excluir um projeto que está em andamento, planejado ou iniciado.");
+        }
+
         repo.deleteById(id);
     }
 
@@ -134,7 +174,7 @@ public class ProjetoServiceImpl implements ProjetoService {
 
         } else if (projeto.getVlOrcamentoTotal().compareTo(new BigDecimal("500001")) >= 0
                 || projeto.getDatPrevisaoFim().isAfter(datePlus6Months)) {
-                    
+
             projeto.setNivelRisco(repoRisco.findByDesNivelRisco("ALTO")
                     .orElseThrow(() -> new ResourceNotFoundException("Nível de risco 'Alto' não encontrado")));
         }

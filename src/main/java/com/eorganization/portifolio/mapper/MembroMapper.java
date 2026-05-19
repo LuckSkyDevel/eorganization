@@ -4,11 +4,11 @@ import org.modelmapper.ModelMapper;
 
 import com.eorganization.portifolio.dto.pessoa.CreateMembroDTO;
 import com.eorganization.portifolio.dto.pessoa.MembroDTO;
-import com.eorganization.portifolio.dto.pessoa.PessoaDTO;
 import com.eorganization.portifolio.dto.projeto.ProjetoDTO;
+import com.eorganization.portifolio.dto.usuario.UsuarioDTO;
 import com.eorganization.portifolio.entity.Membro;
-import com.eorganization.portifolio.entity.Pessoa;
 import com.eorganization.portifolio.entity.Projeto;
+import com.eorganization.portifolio.entity.Usuario;
 import com.eorganization.portifolio.exception.ResourceNotFoundException;
 
 public class MembroMapper {
@@ -24,9 +24,9 @@ public class MembroMapper {
 
         MembroDTO membroDto = mapper.map(membro, MembroDTO.class);
         var projetoDto = mapper.map(membro.getProjeto(), ProjetoDTO.class);
-        var pessoaDto = mapper.map(membro.getPessoa(), PessoaDTO.class);
+        var usuarioDto = mapper.map(membro.getUsuario(), UsuarioDTO.class);
  
-        membroDto.setPessoa(pessoaDto);
+        membroDto.setUsuario(usuarioDto);
         membroDto.setProjeto(projetoDto);
 
         return membroDto;
@@ -38,9 +38,9 @@ public class MembroMapper {
 
         Membro membro = mapper.map(dto, Membro.class);
         var projeto = mapper.map(dto.getProjeto(), Projeto.class);
-        var pessoa = mapper.map(dto.getPessoa(), Pessoa.class);
+        var usuario = mapper.map(dto.getUsuario(), Usuario.class);
 
-        membro.setPessoa(pessoa);
+        membro.setUsuario(usuario);
         membro.setProjeto(projeto);
 
         return membro;

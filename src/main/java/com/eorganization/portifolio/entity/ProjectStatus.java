@@ -7,5 +7,6 @@ public enum ProjectStatus {
     INICIADO, 
     PLANEJADO, 
     EM_ANDAMENTO, 
-    ENCERRADO
+    ENCERRADO,
+    CANCELADO
 }

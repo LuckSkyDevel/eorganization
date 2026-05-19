@@ -55,11 +55,21 @@ public class ProjetoController {
     // return ResponseEntity.ok(membroService.adicionaMembroProjeto(dto));
     // }
 
-    @PutMapping("/atualiza-status/:id")
-    @PreAuthorize("hasAnyRole('ADMIN','GERENTE','FUNCIONARIO')")
+    @PutMapping("/atualiza-status/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','GERENTE')")
     public ResponseEntity<ProjetoDTO> atualizaStatus(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(service.atualizaStatusProjeto(id));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(new ProjetoDTO());
+        }
+    }
+
+    @PutMapping("/cancela-projeto/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','GERENTE')")
+    public ResponseEntity<ProjetoDTO> cancelaProjeto(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(service.cancelaProjeto(id));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(new ProjetoDTO());
         }
