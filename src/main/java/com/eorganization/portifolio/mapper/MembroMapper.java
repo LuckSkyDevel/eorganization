@@ -34,7 +34,7 @@ public class MembroMapper {
 
     public Membro toEntity(CreateMembroDTO dto) {
         if (dto == null) 
-            throw new ResourceNotFoundException("Wasn't convert nullable value!");
+            throw new ResourceNotFoundException("Não é possível converter valor nulo!");
 
         Membro membro = mapper.map(dto, Membro.class);
         var projeto = mapper.map(dto.getProjeto(), Projeto.class);
