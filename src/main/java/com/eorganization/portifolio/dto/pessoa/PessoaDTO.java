@@ -1,6 +1,6 @@
 package com.eorganization.portifolio.dto.pessoa;
 
-import java.util.List;
+import java.time.LocalDate;
 
 import lombok.Data;
 
@@ -10,7 +10,7 @@ public class PessoaDTO {
     private String nomPessoa;
     private String numTelefone;
     private String numCpf;
-    private String datNascimento;
+    private LocalDate datNascimento;
     private Boolean isLiderEquipe;
     private Boolean stAtivo;
 }

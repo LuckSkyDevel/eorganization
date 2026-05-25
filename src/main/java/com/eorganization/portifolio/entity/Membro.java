@@ -1,6 +1,7 @@
 package com.eorganization.portifolio.entity;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -29,9 +31,8 @@ public class Membro {
     @Column(name = "cod_membro")
     private Long codMembro;
 
-    @ManyToOne
-    @JoinColumn(name = "cod_projeto", nullable = false)
-    private Projeto projeto;
+    @ManyToMany(mappedBy = "membros")
+    private Set<Projeto> projetos;
 
     @ManyToOne
     @JoinColumn(name = "cod_usuario", nullable = false)

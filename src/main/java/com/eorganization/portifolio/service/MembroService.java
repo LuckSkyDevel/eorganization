@@ -3,20 +3,19 @@ package com.eorganization.portifolio.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.eorganization.portifolio.dto.pessoa.AtualizaMembroDTO;
 import com.eorganization.portifolio.dto.pessoa.CreateMembroDTO;
 import com.eorganization.portifolio.dto.pessoa.MembroDTO;
-
+import com.eorganization.portifolio.entity.Membro;
+import com.eorganization.portifolio.entity.Usuario;
 
 public interface MembroService {
-    MembroDTO adicionaMembroProjeto(CreateMembroDTO dto);
+    CreateMembroDTO adicionaMembro(Membro membro);
 
-    MembroDTO atualizaMembroProjeto(Long id, AtualizaMembroDTO dto); 
+    CreateMembroDTO adicionaMembroProjeto(CreateMembroDTO dto);
 
     MembroDTO findById(Long id);
 
-    void removeMembroProjeto(Long id);
-
     Page<MembroDTO> listAll(Pageable pageable);
 
+    CreateMembroDTO verificaMembrosExistentesPorUsuario(Usuario usuario);
 }

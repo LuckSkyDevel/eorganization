@@ -2,16 +2,18 @@ package com.eorganization.portifolio.service.impl;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
-import com.eorganization.portifolio.dto.pessoa.AtualizaMembroDTO;
 import com.eorganization.portifolio.dto.pessoa.CreateMembroDTO;
 import com.eorganization.portifolio.dto.pessoa.MembroDTO;
 import com.eorganization.portifolio.entity.Membro;
+import com.eorganization.portifolio.entity.Usuario;
 import com.eorganization.portifolio.exception.ResourceNotFoundException;
 import com.eorganization.portifolio.mapper.MembroMapper;
 import com.eorganization.portifolio.repository.MembroRepository;
 import com.eorganization.portifolio.service.MembroService;
 
+@Service
 public class MembroServiceImpl implements MembroService {
     private final MembroRepository repository;
     private final MembroMapper mapper;
@@ -21,50 +23,46 @@ public class MembroServiceImpl implements MembroService {
         this.mapper = mapper;
     }
 
-
     @Override
-    public MembroDTO adicionaMembroProjeto(CreateMembroDTO dto) {
-        if (dto == null) {
-            throw new ResourceNotFoundException("Wasn't add member in project, but params not presents!");
+    public CreateMembroDTO adicionaMembro(Membro membro) {
+        if (membro == null) {
+            throw new ResourceNotFoundException("Não foi possível adicionar o membro, parametros não encontrados!");
         }
 
-        var membrosProjeto = repository.findByProjetoCodProjeto(dto.getProjeto().getCodProjeto());
-        if (!membrosProjeto.isEmpty() && membrosProjeto.size() == 10) {
-            throw new RuntimeException("Only is possible add 10 members in project!");
-        }
-
-         
         try {
-            Membro membro = mapper.toEntity(dto);
             Membro saved = repository.save(membro);
-    
+
             return mapper.toDto(saved);
-        } catch(Exception e) {
-            throw new RuntimeException("Wasn't insert project. Error:", e);
+        } catch (Exception e) {
+            throw new RuntimeException("Não foi possível inserir o membro. Error:", e);
         }
     }
 
     @Override
-    public MembroDTO atualizaMembroProjeto(Long id, AtualizaMembroDTO dto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    public CreateMembroDTO adicionaMembroProjeto(CreateMembroDTO dto) {
+        if (dto == null) {
+            throw new ResourceNotFoundException("Não foi possível adicionar o membro, parametros não encontrados!");
+        }
+
+        Membro membro = mapper.toEntity(dto);
+
+        return adicionaMembro(membro);
     }
 
     @Override
     public MembroDTO findById(Long id) {
-        return repository.findById(id).map(mapper::toDto)
-                .orElseThrow(() -> new ResourceNotFoundException("Member not found with id: " + id));
-    }
-
-    @Override
-    public void removeMembroProjeto(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'removeMembroProjeto'");
+        return repository.findById(id).map(mapper::toMembroDto)
+                .orElseThrow(() -> new ResourceNotFoundException("Membro não encontrado com o id: " + id));
     }
 
     @Override
     public Page<MembroDTO> listAll(Pageable pageable) {
-        return repository.findAll(pageable).map(mapper::toDto);
+        return repository.findAll(pageable).map(mapper::toMembroDto);
     }
-    
+
+    @Override
+    public CreateMembroDTO verificaMembrosExistentesPorUsuario(Usuario usuario) {
+        return repository.findByUsuario(usuario).map(mapper::toDto)
+                .orElseThrow(() -> new ResourceNotFoundException("Membro não encontrado para o usuário: " + usuario.getCodUsuario()));
+    }
 }

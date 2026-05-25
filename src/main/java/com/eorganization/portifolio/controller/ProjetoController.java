@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.eorganization.portifolio.dto.projeto.AtualizaProjetoDTO;
 import com.eorganization.portifolio.dto.projeto.CadastroProjetoDTO;
+import com.eorganization.portifolio.dto.projeto.MembroProjetoDTO;
 import com.eorganization.portifolio.dto.projeto.ProjetoDTO;
 import com.eorganization.portifolio.service.ProjetoService;
 
+import io.micrometer.common.lang.NonNull;
 import jakarta.validation.Valid;
 
 @RestController
@@ -33,7 +35,7 @@ public class ProjetoController {
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN','GERENTE','USUARIO','FUNCIONARIO')")
     public ResponseEntity<Page<ProjetoDTO>> list(Pageable pageable) {
-        return ResponseEntity.ok(service.listAll(pageable));
+        return ResponseEntity.ok(service.listaTodosProjetos(pageable));
     }
 
     @GetMapping("/{id}")
@@ -48,12 +50,11 @@ public class ProjetoController {
         return ResponseEntity.ok(service.create(dto));
     }
 
-    // @PostMapping("/membro")
-    // @PreAuthorize("hasAnyRole('ADMIN', 'GERENTE')")
-    // public ResponseEntity<MembroDTO> adicionaMembroProjeto(@Valid @RequestBody
-    // CreateMembroDTO dto) {
-    // return ResponseEntity.ok(membroService.adicionaMembroProjeto(dto));
-    // }
+    @PostMapping("/vincula-membro")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GERENTE')")
+    public ResponseEntity<ProjetoDTO> adicionaMembroProjeto(@Valid @RequestBody @NonNull MembroProjetoDTO dto) {
+        return ResponseEntity.ok(service.vinculaMembroAProjeto(dto));
+    }
 
     @PutMapping("/atualiza-status/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','GERENTE')")

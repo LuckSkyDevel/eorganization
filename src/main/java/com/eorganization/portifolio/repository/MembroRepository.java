@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import com.eorganization.portifolio.entity.Membro;
+import com.eorganization.portifolio.entity.Usuario;
 
 public interface MembroRepository extends JpaRepository<Membro, Long>, JpaSpecificationExecutor<Membro> {
     Optional<Membro> save(Long id);
@@ -15,5 +16,6 @@ public interface MembroRepository extends JpaRepository<Membro, Long>, JpaSpecif
 
     Optional<Membro> findById(Long id);
 
-    List<Membro> findByProjetoCodProjeto(Long codProjeto);
+    Optional<Membro> findByUsuario(Usuario usuario);
+
 }

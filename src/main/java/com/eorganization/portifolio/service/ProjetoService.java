@@ -1,10 +1,13 @@
 package com.eorganization.portifolio.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.eorganization.portifolio.dto.projeto.AtualizaProjetoDTO;
 import com.eorganization.portifolio.dto.projeto.CadastroProjetoDTO;
+import com.eorganization.portifolio.dto.projeto.MembroProjetoDTO;
 import com.eorganization.portifolio.dto.projeto.ProjetoDTO;
 
 public interface ProjetoService {
@@ -20,5 +23,9 @@ public interface ProjetoService {
 
     void delete(Long id);
 
-    Page<ProjetoDTO> listAll(Pageable pageable);
+    Page<ProjetoDTO> listaTodosProjetos(Pageable pageable);
+
+    List<ProjetoDTO> listaProjetoPorMembro(Long codMembro);
+
+    ProjetoDTO vinculaMembroAProjeto(MembroProjetoDTO membroProjetoDTO);
 }

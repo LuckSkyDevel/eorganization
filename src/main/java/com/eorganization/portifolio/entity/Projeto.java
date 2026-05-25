@@ -2,15 +2,19 @@ package com.eorganization.portifolio.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -32,7 +36,7 @@ public class Projeto {
     private Long codProjeto;
 
     @ManyToOne
-    @JoinColumn(name = "cod_usuario_responsavel",referencedColumnName="cod_usuario", nullable = false)
+    @JoinColumn(name = "cod_usuario_responsavel", referencedColumnName = "cod_usuario", nullable = false)
     private Usuario usuarioResponsavel;
 
     @Column(name = "nom_projeto", nullable = false)
@@ -44,7 +48,7 @@ public class Projeto {
     @Column(name = "dat_inicio", nullable = false)
     private LocalDate datInicio;
 
-    @Column(name = "dat_previsao_fim", nullable=false)
+    @Column(name = "dat_previsao_fim", nullable = false)
     private LocalDate datPrevisaoFim;
 
     @Column(name = "dat_fim", nullable = true)
@@ -56,6 +60,10 @@ public class Projeto {
     @ManyToOne
     @JoinColumn(name = "cod_nivel_risco", nullable = false)
     private NivelRisco nivelRisco;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "tb_projeto_membro", joinColumns = @JoinColumn(name = "cod_projeto"), inverseJoinColumns = @JoinColumn(name = "cod_membro"))
+    private Set<Membro> membros;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "st_atual", nullable = false)

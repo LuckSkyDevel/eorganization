@@ -106,11 +106,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void register(RegisterRequest request) {
         if (userRepository.existsByNomUsuario(request.getNomUsuario())) {
-            throw new RuntimeException("Wasn't possible to register. Username already taken!");
+            throw new RuntimeException("Não é possível registrar o usuário, pois o nome de usuário já está em uso!");
         }
 
         if (perfilRepository.findAll().isEmpty()) {
-            throw new RuntimeException("Wasn't possible to register. No profiles found!");
+            throw new RuntimeException("Não é possível registrar o usuário. Nenhum perfil encontrado!");
         }
 
         List<Perfil> perfis = perfilRepository.findAll();

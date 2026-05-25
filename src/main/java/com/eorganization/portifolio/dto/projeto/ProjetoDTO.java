@@ -2,8 +2,10 @@ package com.eorganization.portifolio.dto.projeto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 import com.eorganization.portifolio.dto.NivelRiscoDTO;
+import com.eorganization.portifolio.dto.pessoa.MembroDTO;
 import com.eorganization.portifolio.dto.usuario.UsuarioDTO;
 import com.eorganization.portifolio.entity.ProjectStatus;
 
@@ -20,5 +22,6 @@ public class ProjetoDTO {
     private LocalDate datFim;
     private BigDecimal vlOrcamentoTotal;
     private NivelRiscoDTO nivelRisco;
+    private List<MembroDTO> membros;
     private ProjectStatus stAtual;
 }
